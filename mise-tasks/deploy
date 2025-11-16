@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#USAGE arg "<user>" help="SSH user"
+#USAGE arg "<host>" help="SSH host address"
+
+# Simple info logger
+log_info() {
+  printf '[INFO] %s\n' "$*" >&2
+}
+
+remote_host="${usage_user?}@${usage_host?}"
+
+# Copy VM configuration
+log_info "Copying VM configuration to ${remote_host}:/tmp/dokploy.lima.yaml"
+scp dokploy.lima.yaml "${remote_host}:/tmp/dokploy.lima.yaml"
+
+# Start Lima VM
+log_info "Starting Lima VM 'dokploy' on ${remote_host}"
+# Init brew env, so limactl can be accessed
+ssh "${remote_host}" 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" >/dev/null 2>&1 || true; limactl start --name="dokploy" /tmp/dokploy.lima.yaml'
+
+# Remove config file
+log_info "Removing temporary configuration from ${remote_host}"
+ssh "${remote_host}" rm /tmp/dokploy.lima.yaml

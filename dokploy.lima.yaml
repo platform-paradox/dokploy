@@ -1,0 +1,22 @@
+minimumLimaVersion: 2.0.0
+
+base:
+  - template:ubuntu.yaml
+
+mounts: null
+
+# Set resources
+cpus: 4
+memory: 4GiB
+
+disk: "50GiB"
+
+portForwards:
+  - guestPort: 3000
+    hostIP: "0.0.0.0" # overrides the default value "127.0.0.1"; allows privileged port forwarding
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/sh
+      curl -sSL https://dokploy.com/install.sh | sh
