@@ -12,8 +12,13 @@ memory: 4GiB
 disk: "50GiB"
 
 portForwards:
+  # overrides the default value "127.0.0.1"; allows privileged port forwarding
+  # Port for dokploy itself
   - guestPort: 3000
-    hostIP: "0.0.0.0" # overrides the default value "127.0.0.1"; allows privileged port forwarding
+    hostIP: "0.0.0.0"
+  # Port for affine
+  - guestPort: 3010
+    hostIP: "0.0.0.0"
 
 provision:
   - mode: system
